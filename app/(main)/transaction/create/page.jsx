@@ -1,15 +1,23 @@
-"use client";  // Add this to make it a Client Component
+"use client";
 
 import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense, useMemo } from "react";
 import { getUserAccounts } from "@/actions/dashboard";
 import { defaultCategories } from "@/data/categories";
 import { getTransaction } from "@/actions/transaction";
 import AddTransactionForm from "../_components/transaction-form";
 
 export default function AddTransactionPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <AddTransactionContent />
+    </Suspense>
+  );
+}
+
+function AddTransactionContent() {
   const searchParams = useSearchParams();
-  const editId = searchParams.get("edit");  // Use .get() for searchParams in Client Components
+  const editId = useMemo(() => searchParams.get("edit"), [searchParams]); // Memoizing searchParams
 
   const [accounts, setAccounts] = useState([]);
   const [initialData, setInitialData] = useState(null);
